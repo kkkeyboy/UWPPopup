@@ -30,6 +30,7 @@
 *.pidb
 *.svclog
 *.scc
+.pfx
 */Bin/
 */obj/
 */bin/
