@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="UWPPopup.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPPopup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <RelativePanel  HorizontalAlignment="Center">
+            <TextBlock x:Name="tbHW" Text="Hello 弹窗"  />
+            <TextBlock x:Name="tb" RelativePanel.Below="tbHW" Margin="0,10" FontSize="20" Foreground="#f90"/>
+        </RelativePanel>
+        <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
+            <StackPanel  Orientation="Horizontal">
+                <Button Content="MessageDialog" Click="Button_Click"/>
+                <Button Content="Custom" Click="Button_Click" Margin="10,0"/>
+            </StackPanel>
+            <StackPanel  Orientation="Horizontal" Margin="0,5">
+                <Button Content="Toast" Click="Button_Click"/>
+                <Button Content="Notify" Click="Button_Click" Margin="10,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
