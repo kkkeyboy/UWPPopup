@@ -24,16 +24,23 @@ namespace UWPPopup.Controls
         private MessagePopupWindow()
         {
             this.InitializeComponent();
-
             m_Popup = new Popup();
-            this.Width = Window.Current.Bounds.Width;
-            this.Height = Window.Current.Bounds.Height;
+            MeasurePopupSize();
             m_Popup.Child = this;
             this.Loaded += MessagePopupWindow_Loaded;
             this.Unloaded += MessagePopupWindow_Unloaded;
         }
 
+        private void MeasurePopupSize()
+        {
+            this.Width = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Width;
 
+            double marginTop = 0;
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                marginTop = Windows.UI.ViewManagement.StatusBar.GetForCurrentView().OccludedRect.Height;
+            this.Height = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Height;
+            this.Margin = new Thickness(0, marginTop, 0, 0);
+        }
         public MessagePopupWindow(string showMsg) : this()
         {
             this.m_TextBlockContent = showMsg;
@@ -41,19 +48,18 @@ namespace UWPPopup.Controls
         private void MessagePopupWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.tbContent.Text = m_TextBlockContent;
-            Window.Current.SizeChanged += MessagePopupWindow_SizeChanged; 
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBoundsChanged += MessagePopupWindow_VisibleBoundsChanged;
         }
-
-        private void MessagePopupWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            this.Width = e.Size.Width;
-            this.Height = e.Size.Height;
-        }
-
         private void MessagePopupWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.SizeChanged -= MessagePopupWindow_SizeChanged; 
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBoundsChanged -= MessagePopupWindow_VisibleBoundsChanged;
         }
+        private void MessagePopupWindow_VisibleBoundsChanged(Windows.UI.ViewManagement.ApplicationView sender, object args)
+        {
+            MeasurePopupSize();
+        }
+
+
 
 
         public void ShowWIndow()

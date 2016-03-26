@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
         <RelativePanel  HorizontalAlignment="Center">
-            <TextBlock x:Name="tbHW" Text="Hello 弹窗"  />
+            <TextBlock x:Name="tbHW" Text="Hello 弹窗"  Margin="50"/>
             <TextBlock x:Name="tb" RelativePanel.Below="tbHW" Margin="0,10" FontSize="20" Foreground="#f90"/>
         </RelativePanel>
         <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">

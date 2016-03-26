@@ -18,11 +18,10 @@ namespace UWPPopup.Controls
         {
             this.InitializeComponent();
             m_Popup = new Popup();
-            this.Width = Window.Current.Bounds.Width;
-            this.Height = Window.Current.Bounds.Height;
+            MeasurePopupSize();
             m_Popup.Child = this;
-            this.Loaded += NotifyPopup_Loaded; ;
-            this.Unloaded += NotifyPopup_Unloaded; ;
+            this.Loaded += NotifyPopup_Loaded;
+            this.Unloaded += NotifyPopup_Unloaded;
         }
 
         public NotifyPopup(string content, TimeSpan showTime) : this()
@@ -40,13 +39,29 @@ namespace UWPPopup.Controls
             this.m_Popup.IsOpen = true;
         }
 
+        private void MeasurePopupSize()
+        {
+            this.Width = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Width;
+
+            double marginTop = 0;
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                marginTop = Windows.UI.ViewManagement.StatusBar.GetForCurrentView().OccludedRect.Height;
+            this.Height = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Height;
+            this.Margin = new Thickness(0, marginTop, 0, 0);
+        }
+
         private void NotifyPopup_Loaded(object sender, RoutedEventArgs e)
         {
             this.tbNotify.Text = m_TextBlockContent;
             this.sbOut.BeginTime = this.m_ShowTime;
             this.sbOut.Begin();
             this.sbOut.Completed += SbOut_Completed;
-            Window.Current.SizeChanged += Current_SizeChanged; ;
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBoundsChanged += NotifyPopup_VisibleBoundsChanged;
+        }
+
+        private void NotifyPopup_VisibleBoundsChanged(Windows.UI.ViewManagement.ApplicationView sender, object args)
+        {
+            MeasurePopupSize();
         }
 
         private void SbOut_Completed(object sender, object e)
@@ -54,15 +69,10 @@ namespace UWPPopup.Controls
             this.m_Popup.IsOpen = false;
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            this.Width = e.Size.Width;
-            this.Height = e.Size.Height;
-        }
 
         private void NotifyPopup_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.SizeChanged -= Current_SizeChanged;
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBoundsChanged -= NotifyPopup_VisibleBoundsChanged;
         }
     }
 }
